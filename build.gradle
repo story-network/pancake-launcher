@@ -67,7 +67,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
 }
 
@@ -107,6 +107,16 @@ publishing {
         maven {
             name = 'StoryNetwork'
             url = uri('../maven')
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+
+        shadow(MavenPublication) {
+            publication -> project.shadow.component(publication)
         }
     }
 }

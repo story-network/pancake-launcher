@@ -69,7 +69,7 @@ public class PancakeLauncher {
         }
     }
 
-    private static ServerClassLoader prepareServerClassLoader(File serverFile) throws Exception {
+    private static DynamicURLClassLoader prepareServerClassLoader(File serverFile) throws Exception {
         DynamicURLClassLoader loader = new DynamicURLClassLoader(new URL[] { serverFile.toURI().toURL() }, PancakeLauncher.class.getClassLoader());
     
         String version;
@@ -100,15 +100,16 @@ public class PancakeLauncher {
 
         MixinBootstrap.init();
 
-        return new ServerClassLoader(new ModdedClassLoader(loader, new MixinClassModder()));
+        return loader;
     }
 
     public static PancakeLauncher launch(File serverFile, String[] args) throws Exception {
         if (launcher != null)
             throw new RuntimeException("Launcher already created");
 
-        ServerClassLoader serverClassLoader = prepareServerClassLoader(serverFile);
-    
+        DynamicURLClassLoader innerClassLoader = prepareServerClassLoader(serverFile);
+        ServerClassLoader serverClassLoader = new ServerClassLoader(new ModdedClassLoader(innerClassLoader, new MixinClassModder()));
+        
         Thread.currentThread().setContextClassLoader(serverClassLoader);
         ServiceLoader<IPancakeServer> serverLoader = ServiceLoader.load(IPancakeServer.class);
 
@@ -119,7 +120,7 @@ public class PancakeLauncher {
         PancakeLauncher launcher = PancakeLauncher.launcher = new PancakeLauncher(server, serverClassLoader);
 
         LOGGER.info("Launching " + server.getClass().getSimpleName() + "...");
-        server.start(args, launcher::finishMixin);
+        server.start(args, innerClassLoader, launcher::finishMixin);
 
         return launcher;
     }

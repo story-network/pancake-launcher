@@ -9,10 +9,12 @@ Custom server JAR must provide `target_version` resource for detecting capable M
 
 Sample implementation below
 ```java
+import sh.pancake.launcher.classloader.DynamicURLClassLoader;
+
 public class SampleServer implements IPancakeServer {
 
     @Override
-    public void start(String[] args, Runnable finishMixin) {
+    public void start(String[] args, DynamicURLClassLoader urlLoader, Runnable finishMixin) {
         // Finish mixin registration.
         finishMixin.run();
 

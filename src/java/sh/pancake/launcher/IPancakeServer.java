@@ -6,12 +6,20 @@
 
 package sh.pancake.launcher;
 
+import sh.pancake.launcher.classloader.DynamicURLClassLoader;
+
 /**
  * Interface for custom Minecraft server
  */
 public interface IPancakeServer {
 
-     // Impl must call finishMixin after finshing mixin configuration
-     void start(String[] args, Runnable finishMixin);
+     /**
+      * Server entrypoint
+      *
+      * @param args Server arguments
+      * @param urlLoader Use this to load additional files to classpath. Implmentation should not store or expose this.
+      * @param finishMixin Server must call this before finishing mixin setup
+      */
+     void start(String[] args, DynamicURLClassLoader urlLoader, Runnable finishMixin);
 
 }

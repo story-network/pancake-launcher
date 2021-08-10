@@ -6,12 +6,15 @@
 
 package sh.pancake.launcher.util;
 
+import javax.annotation.Nullable;
+
 public class ClassUtil {
     
     public static String getClassFileName(String fullName) {
 		return fullName.replace('.', '/') + ".class";
     }
 
+    @Nullable
     public static String getPackageName(String fullName) {
         int lastIndex = fullName.lastIndexOf(".");
         if (lastIndex == -1) return null;

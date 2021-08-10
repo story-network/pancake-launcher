@@ -104,8 +104,7 @@ public class PancakeLauncher {
     }
 
     public static PancakeLauncher launch(File serverFile, String[] args) throws Exception {
-        if (launcher != null)
-            throw new RuntimeException("Launcher already created");
+        if (launcher != null) throw new RuntimeException("Launcher already created");
 
         DynamicURLClassLoader innerClassLoader = prepareServerClassLoader(serverFile);
         ServerClassLoader serverClassLoader = new ServerClassLoader(new ModdedClassLoader(innerClassLoader, new MixinClassModder()));

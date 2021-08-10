@@ -21,7 +21,7 @@ public class Launcher implements Callable<Void> {
     File server;
 
     @Parameters(index = "1..*", description = "server arguments")
-    String[] args;
+    String[] args = new String[0];
 
     @Override
     public Void call() throws Exception {

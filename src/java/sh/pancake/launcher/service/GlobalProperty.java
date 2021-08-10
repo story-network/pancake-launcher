@@ -1,7 +1,7 @@
 /*
  * Created on Sat Sep 26 2020
  *
- * Copyright (c) storycraft. Licensed under the Apache Licence 2.0.
+ * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
 package sh.pancake.launcher.service;

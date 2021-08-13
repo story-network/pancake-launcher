@@ -13,7 +13,7 @@ plugins {
 }
 
 group 'sh.pancake'
-version '0.2.1'
+version '0.3.0'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -42,16 +42,23 @@ repositories {
 }
 
 dependencies {
-    api 'sh.pancake:pancake-sauce:0.1.0'
+    implementation 'sh.pancake:pancake-sauce:0.1.0'
     api 'sh.pancake:story-network-launch-util:0.1.0'
 
     implementation 'info.picocli:picocli:4.6.1'
 
     api 'org.apache.logging.log4j:log4j-core:2.8.1'
     api 'org.apache.logging.log4j:log4j-api:2.8.1'
+
     implementation 'org.fusesource.jansi:jansi:1.18'
 
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    api 'com.google.code.findbugs:jsr305:3.0.2'
+
+    api 'org.jline:jline-terminal:3.19.0'
+    api 'org.jline:jline-terminal-jansi:3.19.0'
+    api 'org.jline:jline-reader:3.19.0'
+
+    api 'net.minecrell:terminalconsoleappender:1.2.0'
 
     // Mixin modding
     api('org.spongepowered:mixin:0.8') {
@@ -60,11 +67,11 @@ dependencies {
         exclude group: 'org.apache.logging.log4j', module: 'log4j-core'
     }
 
-    implementation 'org.ow2.asm:asm:7.1'
-	implementation 'org.ow2.asm:asm-analysis:7.1'
-	implementation 'org.ow2.asm:asm-commons:7.1'
-	implementation 'org.ow2.asm:asm-tree:7.1'
-    implementation 'org.ow2.asm:asm-util:7.1'
+    api 'org.ow2.asm:asm:9.2'
+	api 'org.ow2.asm:asm-analysis:9.2'
+	api 'org.ow2.asm:asm-commons:9.2'
+	api 'org.ow2.asm:asm-tree:9.2'
+    api 'org.ow2.asm:asm-util:9.2'
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }

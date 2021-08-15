@@ -15,8 +15,7 @@ plugins {
 group 'sh.pancake'
 version '0.4.0'
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+java.toolchain.languageVersion = JavaLanguageVersion.of(11)
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"

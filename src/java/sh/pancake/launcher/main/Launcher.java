@@ -17,6 +17,11 @@ import sh.pancake.launcher.PancakeLauncher;
 @Command(name = "pancake-launcher")
 public class Launcher implements Callable<Void> {
 
+    static {
+        // JANSI
+        System.setProperty("log4j.skipJansi", "false");
+    }
+
     @Parameters(index = "0", description = "server file to launch")
     File server;
 

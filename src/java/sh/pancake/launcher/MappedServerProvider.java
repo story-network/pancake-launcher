@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -154,9 +155,10 @@ public class MappedServerProvider {
 
             ExecutorService service = Executors.newCachedThreadPool();
 
-            for (var future : sauce.remapJarAsync(service, serverOutput, progressHandler)) {
-                future.get();
-            }
+            sauce.remapJarAsync(service, serverOutput, progressHandler);
+
+            service.shutdown();
+            service.awaitTermination(10, TimeUnit.MINUTES);
         }
 
         return mappedFile;

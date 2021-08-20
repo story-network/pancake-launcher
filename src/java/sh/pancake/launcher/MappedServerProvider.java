@@ -158,7 +158,7 @@ public class MappedServerProvider {
             sauce.remapJarAsync(service, serverOutput, progressHandler);
 
             service.shutdown();
-            service.awaitTermination(10, TimeUnit.MINUTES);
+            service.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
         }
 
         return mappedFile;

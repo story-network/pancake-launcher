@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -140,9 +142,21 @@ public class MappedServerProvider {
             ZipInputStream serverInput = new ZipInputStream(new ByteArrayInputStream(rawMCServer));
             ZipOutputStream serverOutput = new ZipOutputStream(new FileOutputStream(mappedFile))
         ) {
-            PancakeSauce sauce = new PancakeSauce(serverInput, table);
+            PancakeSauce sauce = new PancakeSauce(
+                serverInput,
+                table,
+                (entry) -> {
+                    String name = entry.getName();
 
-            sauce.remapJar(serverOutput, progressHandler);
+                    return !name.contains("/") || name.startsWith("com/mojang") || name.startsWith("net/minecraft");
+                }
+            );
+
+            ExecutorService service = Executors.newCachedThreadPool();
+
+            for (var future : sauce.remapJarAsync(service, serverOutput, progressHandler)) {
+                future.get();
+            }
         }
 
         return mappedFile;

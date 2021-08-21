@@ -17,8 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -120,6 +120,12 @@ public class MappedServerProvider {
         return mapFile;
     }
 
+    private boolean filterEntry(ZipEntry entry) {
+        String name = entry.getName();
+
+        return !name.contains("/") || name.startsWith("com/mojang") || name.startsWith("net/minecraft");
+    }
+
     public File provideServer(boolean recache, Consumer<RemapInfo> progressHandler) throws Exception {
         File mappedFile = new File(patchDirectory, version + "-server-mapped.jar");
 
@@ -134,9 +140,9 @@ public class MappedServerProvider {
         
         ConversionTable table = parser.parse(mappingStr);
         try(ZipInputStream serverInput = new ZipInputStream(new ByteArrayInputStream(rawMCServer))) {
-            SaucePreprocessor preprocessor = new SaucePreprocessor();
+            SaucePreprocessor preprocessor = new SaucePreprocessor(serverInput, this::filterEntry);
 
-            preprocessor.process(serverInput, table);
+            preprocessor.process(table);
         }
 
         try (
@@ -146,19 +152,14 @@ public class MappedServerProvider {
             PancakeSauce sauce = new PancakeSauce(
                 serverInput,
                 table,
-                (entry) -> {
-                    String name = entry.getName();
-
-                    return !name.contains("/") || name.startsWith("com/mojang") || name.startsWith("net/minecraft");
-                }
+                this::filterEntry
             );
 
             ExecutorService service = Executors.newCachedThreadPool();
 
-            sauce.remapJarAsync(service, serverOutput, progressHandler);
+            sauce.remapJarAsync(service, serverOutput, progressHandler).join();
 
             service.shutdown();
-            service.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
         }
 
         return mappedFile;

@@ -41,4 +41,29 @@ public class PancakeMixinTransformer implements IMixinTransformer {
         return transformer.getExtensions();
     }
 
+    @Override
+    public boolean computeFramesForClass(MixinEnvironment environment, String name, ClassNode classNode) {
+        return transformer.computeFramesForClass(environment, name, classNode);
+    }
+
+    @Override
+    public byte[] transformClass(MixinEnvironment environment, String name, byte[] classBytes) {
+        return transformer.transformClass(environment, name, classBytes);
+    }
+
+    @Override
+    public boolean transformClass(MixinEnvironment environment, String name, ClassNode classNode) {
+        return transformer.transformClass(environment, name, classNode);
+    }
+
+    @Override
+    public byte[] generateClass(MixinEnvironment environment, String name) {
+        return transformer.generateClass(environment, name);
+    }
+
+    @Override
+    public boolean generateClass(MixinEnvironment environment, String name, ClassNode classNode) {
+        return transformer.generateClass(environment, name, classNode);
+    }
+
 }

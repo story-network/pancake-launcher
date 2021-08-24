@@ -119,7 +119,7 @@ public class PancakeLauncher {
         PancakeLauncher launcher = PancakeLauncher.launcher = new PancakeLauncher(server, serverClassLoader);
 
         LOGGER.info("Launching " + server.getClass().getSimpleName() + "...");
-        server.start(args, innerClassLoader, launcher::finishMixin);
+        server.start(args, innerClassLoader::addURL, launcher::finishMixin);
 
         return launcher;
     }

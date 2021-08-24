@@ -20,14 +20,17 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.launch.platform.container.ContainerHandleURI;
 import org.spongepowered.asm.launch.platform.container.IContainerHandle;
+import org.spongepowered.asm.logging.ILogger;
 import org.spongepowered.asm.mixin.MixinEnvironment.CompatibilityLevel;
 import org.spongepowered.asm.mixin.MixinEnvironment.Phase;
 import org.spongepowered.asm.service.IClassBytecodeProvider;
 import org.spongepowered.asm.service.IClassProvider;
 import org.spongepowered.asm.service.IClassTracker;
 import org.spongepowered.asm.service.IMixinAuditTrail;
+import org.spongepowered.asm.service.IMixinInternal;
 import org.spongepowered.asm.service.IMixinService;
 import org.spongepowered.asm.service.ITransformerProvider;
+import org.spongepowered.asm.service.mojang.LoggerAdapterLog4j2;
 import org.spongepowered.asm.util.ReEntranceLock;
 
 import sh.pancake.launcher.PancakeLauncher;
@@ -36,7 +39,7 @@ import sh.pancake.launcher.util.ClassUtil;
 // Pancake!!
 public class PancakeMixinService implements IMixinService, IClassProvider, IClassTracker, IClassBytecodeProvider {
 
-    private static final Logger LOGGER = LogManager.getLogger("PancakeMixinService");
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private ReEntranceLock lock = new ReEntranceLock(10);
 
@@ -142,12 +145,12 @@ public class PancakeMixinService implements IMixinService, IClassProvider, IClas
 
     @Override
     public CompatibilityLevel getMinCompatibilityLevel() {
-        return CompatibilityLevel.JAVA_9;
+        return CompatibilityLevel.JAVA_8;
     }
 
     @Override
     public CompatibilityLevel getMaxCompatibilityLevel() {
-        return CompatibilityLevel.JAVA_11;
+        return CompatibilityLevel.JAVA_18;
     }
 
     @Override
@@ -206,6 +209,16 @@ public class PancakeMixinService implements IMixinService, IClassProvider, IClas
     @Override
     public String getClassRestrictions(String className) {
         return "";
+    }
+
+    @Override
+    public void offer(IMixinInternal internal) {
+
+    }
+
+    @Override
+    public ILogger getLogger(String name) {
+        return new LoggerAdapterLog4j2(name);
     }
     
 }
